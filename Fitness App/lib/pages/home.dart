@@ -5,6 +5,8 @@ import 'package:flutter_p/models/category_model.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_p/models/diet_model.dart';
 
+import '../models/popular_model.dart';
+
 class HomePage extends StatefulWidget {
   HomePage({super.key});
 
@@ -15,10 +17,12 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   List<CategoryModel> categories = [];
   List<DietModel> diets = [];
+  List<PopularDietsModel> popularDiets = [];
 
   void getInitialInfo() {
     categories = CategoryModel.getCategories();
     diets = DietModel.getDiets();
+    popularDiets = PopularDietsModel.getPopularDiets();
   }
 
   @override
@@ -27,15 +31,18 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: appBar(), //Clean code
       backgroundColor: Colors.white,
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      body: ListView( //For size of an screen error
         children: [
           searchField(),
           const SizedBox(height: 40,), //Create distance
           categoriesSection(),
            SizedBox(height: 40,),
            dietSection(),
+          SizedBox(height: 40,),
+          popularSection(),
+          SizedBox(height: 40,),
         ],
+
       ),
     );
   }
@@ -295,6 +302,89 @@ class _HomePageState extends State<HomePage> {
               ),
               itemCount: diets.length),
         ),
+      ],
+    );
+  }
+
+  Column popularSection(){
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 20),
+          child: Text(
+            "Popular",
+            style: TextStyle(
+                color: Colors.black,
+                fontSize: 18,
+                fontWeight: FontWeight.w600
+            ),
+          ),
+        ),
+        SizedBox(height: 15,),
+        ListView.separated(
+            shrinkWrap: true, //If it is not true listview will be big as parent, if true list wrap own content and big as childen
+            padding: EdgeInsets.only(
+                left: 20,
+                right: 20
+            ),
+            itemBuilder: (context, index){
+              return Container(
+                height: 100,
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                          color : Color(0xff1d1617).withOpacity(0.07),
+                          offset: Offset(0, 10),
+                          blurRadius: 40,
+                          spreadRadius: 0
+                      )
+                    ]
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    SvgPicture.asset(popularDiets[index].iconPath,
+                      width: 60,
+                      height: 60,),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          popularDiets[index].name,
+                          style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 16,
+                              color: Colors.black
+                          ),
+                        ),
+                        Text(
+                          popularDiets[index].level + " | " + popularDiets[index].duration + " | " + popularDiets[index].calorie,
+                          style: TextStyle(
+                              color: Color(0xff7b6f72),
+                              fontSize: 13,
+                              fontWeight: FontWeight.w400
+                          ),
+                        ),
+                      ],
+                    ),
+                    GestureDetector(
+                      onTap: (){
+
+                      },
+                      child: SvgPicture.asset("assets/icons/button-next.svg",
+                        width: 30,
+                        height: 30,),
+                    )
+                  ],
+                ),
+              );
+            },
+            separatorBuilder: (context, index) => SizedBox(height: 25,),
+            itemCount: popularDiets.length)
       ],
     );
   }
