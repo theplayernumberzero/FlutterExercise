@@ -1,7 +1,14 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 
 class SonucEkrani extends StatefulWidget {
-  const SonucEkrani({super.key});
+
+  bool sonuc;
+
+  SonucEkrani({
+    Key? key,
+    required this.sonuc,
+  }) : super(key: key);
 
   @override
   State<SonucEkrani> createState() => _SonucEkraniState();
@@ -21,9 +28,9 @@ class _SonucEkraniState extends State<SonucEkrani> {
             SizedBox(
               width: 200,
               height: 200,
-              child: Image.asset("resimler/mutlu.png")
+              child: widget.sonuc ? Image.asset("resimler/mutlu.png") : Image.asset("resimler/uzgun.png")
               ),
-              Text("KAZANDINIZ", style: TextStyle(fontSize: 36),),
+              Text(widget.sonuc ? "KAZANDINIZ" : "KAYBETTİNİZ", style: TextStyle(fontSize: 36),),
               SizedBox(
               width: 200,
               height: 50,

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:sayi_tahmin_uygulamasi/SonucEkrani.dart';
 
@@ -9,6 +11,19 @@ class TahminEkrani extends StatefulWidget {
 }
 
 class _TahminEkraniState extends State<TahminEkrani> {
+
+  var tfTahmin = TextEditingController();
+  int rastgeleSayi = 0;
+  int kalanHak = 5;
+  String ipucu = "";
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    rastgeleSayi = Random().nextInt(101);  //0-100 arasında
+    print("Rastgele Sayi: $rastgeleSayi");
+  }
   @override
   Widget build(BuildContext context) {
      return Scaffold(
@@ -19,11 +34,12 @@ class _TahminEkraniState extends State<TahminEkrani> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Text("Kalan Hak: 4", style: TextStyle(fontSize: 30, color: Colors.pink),),
-            Text("Yardım: Tahmini Azalt!", style: TextStyle(fontSize: 24),),
+            Text("Kalan Hak: $kalanHak", style: TextStyle(fontSize: 30, color: Colors.pink),),
+            Text("Yardim: $ipucu !", style: TextStyle(fontSize: 24),),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextField(
+                controller: tfTahmin,
                 keyboardType: TextInputType.number,
                 textAlign: TextAlign.center,
                 decoration: InputDecoration(
@@ -39,7 +55,35 @@ class _TahminEkraniState extends State<TahminEkrani> {
               height: 50,
               child: ElevatedButton(
                 onPressed: (){
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SonucEkrani()));
+
+                  setState(() {
+                    kalanHak--;
+                  });
+
+                  int tahmin = int.parse(tfTahmin.text);
+
+                  if(tahmin == rastgeleSayi){
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SonucEkrani(sonuc: true,)));
+                    return; //Button çalışmasını durdurmak için
+                  }
+                  if (tahmin > rastgeleSayi) {
+                    setState(() { //Arayüzün güncelleneceği değişikliklerde set state metodunu kullan
+                      ipucu = "Tahmini Azalt";
+                    });
+                    
+                  }
+                  if (tahmin > rastgeleSayi) {
+                    setState(() {
+                      ipucu = "Tahmini Arttir";
+                    });
+                    
+                  }
+                  if (kalanHak == 0) {
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SonucEkrani(sonuc: false)));
+                  }
+
+                  tfTahmin.text = "";
+
               
               }, child: Text("TAHMİN ET")),
             ),
