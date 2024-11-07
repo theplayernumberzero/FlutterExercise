@@ -1,3 +1,4 @@
+import 'package:film_uygulamasi/DetaySayfa.dart';
 import 'package:film_uygulamasi/Filmler.dart';
 import 'package:flutter/material.dart';
 
@@ -58,21 +59,26 @@ class _HomePageState extends State<HomePage> {
                 itemBuilder: (context, index){  //Listedeki her eleman için çalışır(döngü)
                   var film = liste[index];
         
-                  return Card(
-                    color: const Color.fromARGB(255, 184, 24, 13),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: SizedBox(
-                            width: 180,
-                            height: 280,
-                            child: Image.asset("resimler/${film.film_resim_adi}")),
-                        ),
-                        Text(film.film_adi, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
-                        Text("${film.film_fiyat.toInt()} ₺", style: TextStyle(fontSize: 16, ),),  
-                      ],
+                  return GestureDetector(
+                    onTap: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => DetaySayfa(film: film)));
+                    },
+                    child: Card(
+                      color: const Color.fromARGB(255, 184, 24, 13),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: SizedBox(
+                              width: 180,
+                              height: 280,
+                              child: Image.asset("resimler/${film.film_resim_adi}")),
+                          ),
+                          Text(film.film_adi, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
+                          Text("${film.film_fiyat.toInt()} ₺", style: TextStyle(fontSize: 16, ),),  
+                        ],
+                      ),
                     ),
                   );
                 },
