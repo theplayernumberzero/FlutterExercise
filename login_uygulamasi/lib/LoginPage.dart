@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:login_uygulamasi/Anasayfa.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -12,14 +13,31 @@ class _LoginPageState extends State<LoginPage> {
   var tfKullaniciAdi = TextEditingController();
   var tfSifre = TextEditingController();
 
-  var scaffoldKey = GlobalKey<ScaffoldState>();
+  Future<void> girisKontrol() async{
+    var ka = tfKullaniciAdi.text;
+    var s = tfSifre.text;
+
+    //Geçerli kullanici adi ve şifre
+    if(ka == "admin" && s == "12345"){
+      var sp = await SharedPreferences.getInstance();
+
+      sp.setString("kullaniciAdi", ka);
+      sp.setString("sifre", s);
+
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Anasayfa()));
+
+    }else{
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Giriş Hatalı'),));
+    }
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: scaffoldKey,
       appBar: AppBar(
         centerTitle: true,
-        title: Text(
+        title: const Text(
           "LOGIN",
           style: TextStyle(color: Colors.white,),
         ),
@@ -89,7 +107,7 @@ class _LoginPageState extends State<LoginPage> {
               ElevatedButton(
                 child: Text("GİRİŞ YAP"),
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => Anasayfa()));
+                  girisKontrol();
                 },
               )
             ],

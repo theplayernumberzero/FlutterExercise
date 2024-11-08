@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:login_uygulamasi/LoginPage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Anasayfa extends StatefulWidget {
   const Anasayfa({super.key});
@@ -8,6 +10,34 @@ class Anasayfa extends StatefulWidget {
 }
 
 class _AnasayfaState extends State<Anasayfa> {
+
+  late String spKullaniciAdi;
+  late String spSifre;
+
+  Future<void> oturumBilgisiOku() async{
+    var sp = await SharedPreferences.getInstance();
+
+    setState(() {
+      spKullaniciAdi = sp.getString("kullaniciAdi") ?? "kullanici adi yok";
+      spSifre = sp.getString("sifre") ?? "sifre yok";
+    });
+  }
+
+  Future<void> cikisYap() async{
+    var sp = await SharedPreferences.getInstance();
+
+    sp.remove("kullaniciAdi");
+    sp.remove("sifre");
+
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginPage()));
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    oturumBilgisiOku();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -15,16 +45,18 @@ class _AnasayfaState extends State<Anasayfa> {
         title: Text("Anasayfa"),
         backgroundColor: Colors.green,
         actions: [
-          IconButton(onPressed: () {}, icon: Icon(Icons.exit_to_app)),
+          IconButton(onPressed: () {
+            cikisYap();
+          }, icon: Icon(Icons.exit_to_app)),
         ],
       ),
-      body: const Center(
+      body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Text(
-              "Kullanici Adi:\n",
-              style: TextStyle(
+              "Kullanici Adi:\n$spKullaniciAdi",
+              style: const TextStyle(
                 fontSize: 24, // Font size
                 fontWeight: FontWeight.bold, // Font weight
                 color: Colors.green, // Text color
@@ -43,8 +75,8 @@ class _AnasayfaState extends State<Anasayfa> {
                   TextAlign.center, // Text alignment (left, center, right)
             ),
             Text(
-              "Şifre:\n",
-              style: TextStyle(
+              "Şifre:\n$spSifre",
+              style: const TextStyle(
                 fontSize: 24, // Font size
                 fontWeight: FontWeight.bold, // Font weight
                 color: Colors.green, // Text color
