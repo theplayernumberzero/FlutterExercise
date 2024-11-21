@@ -11,7 +11,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   late AnimationController animasyonKontrol;
 
-  late Animation<double> alphaAnimasyonDegerleri;
+  late Animation<double> scaleAnimasyonDegerleri;
 
   @override
   void initState() {
@@ -20,7 +20,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     //Nesne olarak tanımla
     animasyonKontrol = AnimationController(duration: Duration(milliseconds: 3000),vsync: this);
 
-    alphaAnimasyonDegerleri = Tween(begin: 1.0, end: 0.0).animate(animasyonKontrol)..addListener(() {setState(() {});});  //Opacity widget için value üretecek
+    scaleAnimasyonDegerleri = Tween(begin: 128.0, end: 32.0).animate(animasyonKontrol)..addListener(() {setState(() {});});  //Opacity widget için value üretecek
   }
 
   //Sayfa arkaplana gittiğinde çalışan yapı
@@ -38,9 +38,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Opacity(
-              opacity: alphaAnimasyonDegerleri.value,
-              child: Icon(Icons.wb_cloudy, color: Colors.white, size: 128,)),
+            Icon(Icons.wb_cloudy, color: Colors.white, size: scaleAnimasyonDegerleri.value,),
             Text("Hava Durumu", style: TextStyle(color: Colors.white, fontSize: 36),),
             SizedBox(
               height: 50,
